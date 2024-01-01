@@ -1,31 +1,59 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from "vue";
+
+const a: string = "hello world123";
+const b: string = "<h1>hello world1</h1>";
+
+const event = "click"; // 事件名称[click, mouseover, mouseout, ...]
+const clickBtn = () => {
+  console.log("点击按钮....");
+};
+const parentEvent = () => {
+  console.log("点击父级按钮....");
+};
+
+// v-once演示
+const onceVal = ref("只有当a改变时才会重新渲染");
+const changeC = () => {
+  onceVal.value = "改变c"; // 点击不会改变
+};
+
+// // v-memo演示
+// const arr = ref([1, 2, 3]);
+// const changeArr = () => {
+//   arr.value.push(4);
+// };
 </script>
 
 <template>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <!-- v-html和v-text -->
+    <div v-text="a"></div>
+    <div v-html="b"></div>
+
+    <!-- 事件绑定 -->
+    <div class="parent" @click="parentEvent">
+      <!-- .stop阻止冒泡 -->
+      <!-- .once保证事件只触发一次 -->
+      <div @[event].stop="clickBtn">点击按钮</div>
+    </div>
+
+    <!-- v-once和v-meemo -->
+    <div>-------------演示v-once------------</div>
+    <div v-once>{{ onceVal }}</div>
+    <button @click="changeC">点击也无法改变上面的值</button>
+
+    <!-- vue3.2新增v-memo -->
+    <!-- 
+      使用场景: 大量dom渲染的微小优化
+     -->
+    <!-- <div>-------------演示v-memo------------</div>
+    <div v-for="(item, index) in arr" :key="index" v-memo="[item == 2]">
+      {{ item }}
+    </div>
+    <button @click="changeArr">改变arr</button> -->
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+<style scoped lang="less">
 </style>
